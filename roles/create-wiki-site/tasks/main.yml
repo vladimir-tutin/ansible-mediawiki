@@ -1,0 +1,15 @@
+
+#clones MediaWiki from Git
+- name: Clone MediaWiki Repo - This will take a while
+  git:
+    dest: /usr/share/nginx/html/mediawiki
+    repo: https://github.com/wikimedia/mediawiki.git
+    update: no
+    
+#Clone vendor folder info mediawiki folder
+- name: Clone Vender folder
+  git:
+    dest: /usr/share/nginx/html/mediawiki/vendor
+    repo: https://gerrit.wikimedia.org/r/p/mediawiki/vendor.git
+    update: no
+        

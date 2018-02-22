@@ -1,28 +1,51 @@
-# Install php7 and dependencies
-- name: Install PHP7 and Deps
+# Download fedora project and webtatic repos
+- name: Download required PHP repositories (1/2)
+  get_url:
+    url: "{{ fedoraproject_php_repo }}"
+    dest: "{{ fedoraproject_php_repo_rpm }}"
+    
+- name: Download required PHP repositories (2/2)
+  get_url:
+    url: "{{ webtatic_php_repo }}"
+    dest: "{{ webtatic_php_repo_rpm }}"
+
+# Install the repositories we just downloaded    
+- name: Install PHP repositories
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - "{{ fedoraproject_php_repo_rpm }}"
+    - "{{ webtatic_php_repo_rpm }}"
+
+# Install php5 and dependencies
+- name: Install PHP5 and Deps
   yum:
     name: "{{ item }}"
     state: latest
   with_items:
-    - php
-    - php-mcrypt
-    - php-cli
-    - php-gd
-    - php-curl
-    - php-mysql
-    - php-ldap
-    - php-zip
-    - php-fileinfo
-    - php-fpm
-    - php-intl
-    - php-json
+    - php56w
+    - php56w-mysql
+    - php56w-fpm
+    - php56w-mbstring
 
-# Set cgi.fix_pathinfo from 1 to 0 in /etc/php.ini
-- name: Set cgi.fix_pathinfo to 0
-  lineinfile:
-    dest: /etc/php.ini
-    regexp: '^(.*)cgi.fix_pathinfo=1'
-    line: cgi.fix_pathinfo=0
-  notify:
-    - restart php-fpm
-    - restart nginx
+ # Set cgi.fix_pathinfo from 1 to 0 in www.conf
+ - name: Set cgi.fix_pathinfo to 0
+   lineinfile:
+     dest: /etc/php-fpm.d/www.conf
+     regexp: '^(.*)cgi.fix_pathinfo=1'
+     line: cgi.fix_pathinfo=0
+    
+ 
+#Change the owner and group from apache to nginx
+ - name: Changing owner from Apache to Nginx
+   lineinfile:
+     dest: /etc/php-fpm.d/www.conf
+     regexp: "^{{ item }} = apache"
+     line: "{{ item }} = nginx"
+   with_items:
+     - user
+     - group   
+   notify: restart php-fpm
+
+    

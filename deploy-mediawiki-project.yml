@@ -1,0 +1,28 @@
+############################################
+#   Installs and configures a LEMP stack.  #
+#                                          #
+#        Clones MediaWiki from Git         #
+#     Accessible: http://ip/mediawiki      #
+#                                          #
+#        Author: Patrick Coy               #
+############################################
+---
+- hosts: webservers
+  vars:
+   current_mysql_repo_rpm: "mysql57-community-release-el7-11.noarch.rpm"
+   fedoraproject_php_repo: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
+   webtatic_php_repo: "https://mirror.webtatic.com/yum/el7/webtatic-release.rpm"
+   fedoraproject_php_repo_rpm: "/tmp/fedoraproject-repo.rpm"
+   webtatic_php_repo_rpm: "/tmp/webtatic-repo.rpm"
+  
+  roles:
+    - install-git
+    - create-wiki-site
+    - install-config-mysql
+    - install-config-php
+    - install-config-nginx
+    
+    
+
+
+    

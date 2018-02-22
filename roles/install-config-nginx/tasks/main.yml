@@ -8,7 +8,6 @@
   yum:
     name: nginx
     state: latest
-  notify: restart nginx
 
 # Allows https traffic (firewall-cmd --permanent --zone=public --add-service=http(s))
 - name: Allow HTTP traffic through firewall
@@ -20,3 +19,20 @@
   with_items:
     - http
     - https
+  notify: reload firewalld
+    
+# Remove nginx.conf
+ - name: Removing default nginx.conf
+   file:
+     path: /etc/nginx/nginx.conf
+     state: absent
+    
+ # Copy nginx.conf template
+ - name: Copying nginx.conf template
+   template:
+     src: nginx.conf.j2
+     dest: /etc/nginx/nginx.conf
+     owner: root
+     group: root
+     mode: 0644
+   notify: restart nginx
