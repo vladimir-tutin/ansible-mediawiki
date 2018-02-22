@@ -1,0 +1,10 @@
+- hosts: webservers
+
+  tasks:
+  
+    - name: Clone Wikitten Git Repo
+      git:
+        dest: /var/www/wikitten
+        repo: https://github.com/victorstanciu/Wikitten.git
+        update: no
+        

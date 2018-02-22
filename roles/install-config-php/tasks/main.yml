@@ -1,0 +1,28 @@
+# Install php7 and dependencies
+- name: Install PHP7 and Deps
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - php
+    - php-mcrypt
+    - php-cli
+    - php-gd
+    - php-curl
+    - php-mysql
+    - php-ldap
+    - php-zip
+    - php-fileinfo
+    - php-fpm
+    - php-intl
+    - php-json
+
+# Set cgi.fix_pathinfo from 1 to 0 in /etc/php.ini
+- name: Set cgi.fix_pathinfo to 0
+  lineinfile:
+    dest: /etc/php.ini
+    regexp: '^(.*)cgi.fix_pathinfo=1'
+    line: cgi.fix_pathinfo=0
+  notify:
+    - restart php-fpm
+    - restart nginx

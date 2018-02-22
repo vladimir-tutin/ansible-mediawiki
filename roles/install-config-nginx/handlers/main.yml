@@ -1,0 +1,11 @@
+# Restart the Nginx service
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted
+  
+# Reload the firewall config
+- name: reload firewalld
+  service:
+    name: firewalld
+    state: restarted

@@ -1,0 +1,20 @@
+# Download the mysql repo
+- name: Download the MySQL repo .rpm
+  get_url:
+    url: "{{ mysql_url }}{{ current_mysql_repo_rpm }}"
+    dest: /tmp/mysqlrepo.rpm
+
+# Install the mysql repo
+- name: Install MySQL repo
+  yum:
+    name: /tmp/mysqlrepo.rpm
+    state: present
+
+# Install the mysql-server and client
+- name: Install MySQL Server and Client
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - mysql-server
+    - mysql

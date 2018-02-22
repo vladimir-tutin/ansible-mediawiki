@@ -1,0 +1,22 @@
+
+- name: Add Nginx Repo
+  yum:
+    name: epel-release
+    state: latest
+
+- name: Install Nginx
+  yum:
+    name: nginx
+    state: latest
+  notify: restart nginx
+
+# Allows https traffic (firewall-cmd --permanent --zone=public --add-service=http(s))
+- name: Allow HTTP traffic through firewall
+  firewalld:
+    service: "{{ item }}"
+    permanent: yes
+    zone: public
+    state: enabled
+  with_items:
+    - http
+    - https
